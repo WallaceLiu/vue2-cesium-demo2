@@ -5,6 +5,7 @@
 - cnpm@9.2.0 
 - npm@9.6.6
 - node@16.20.0
+- vue2
 
 ## Project setup
 ```
@@ -20,6 +21,3 @@ npm run serve
 ```
 npm run build
 ```
-
-
-
