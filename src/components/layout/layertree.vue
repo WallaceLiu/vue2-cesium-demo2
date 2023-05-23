@@ -1,14 +1,21 @@
 <template>
   <div class="layertree">
-        <span style="font-size:18px; font-family: myFirstFont; font-weight:bold; padding:10px;"  >图层管理</span>
-    <hr/>
+    <span
+      style="
+        font-size: 18px;
+        font-family: myFirstFont;
+        font-weight: bold;
+        padding: 10px;
+      "
+      >图层管理</span
+    >
+    <hr />
     <Tree
       ref="tree"
       :data="data"
       show-checkbox
       @on-check-change="checkChange"
       @on-select-change="selectChange"
-     
       class="tree-content"
     ></Tree>
 
@@ -33,13 +40,15 @@ var heatMapData = [];
 
 var terrainProvider = null;
 var poiPositions = [];
-var centerArr = [] ;
+var centerArr = [];
 var extent = {};
 var maxZoom = 14;
 var poiShow = true;
 var timestamp = 0;
 var labelDataSource = null;
-var entities,  centerArr = [] , entityHeights=[];
+var entities,
+  centerArr = [],
+  entityHeights = [];
 var colorListJIBIE = [
   Cesium.Color.RED,
   Cesium.Color.ORANGERED,
@@ -186,115 +195,115 @@ export default {
       this.initChecked();
       viewer.scene.camera.moveEnd.addEventListener(this.cameraEndEvent);
     });
-//maximumScreenSpaceError 越小越清晰
-      Bus.$on('message1',val=>{
-        this.value=val
-        var value1 =16-val*0.16;
-        console.log(value1);
+    //maximumScreenSpaceError 越小越清晰
+    Bus.$on("message1", (val) => {
+      this.value = val;
+      var value1 = 16 - val * 0.16;
+      console.log(value1);
       for (const key in tilesetArray) {
-       if (Object.hasOwnProperty.call(tilesetArray, key)) {
-      const element = tilesetArray[key];
-      element.maximumScreenSpaceError=value1;
+        if (Object.hasOwnProperty.call(tilesetArray, key)) {
+          const element = tilesetArray[key];
+          element.maximumScreenSpaceError = value1;
         }
+      }
+    });
+    //maximumMemoryUsage 内存大小
+    Bus.$on("message2", (val) => {
+      this.value = val;
+      var value2 = val * 102.4;
+      console.log(value2);
+      for (const key in tilesetArray) {
+        if (Object.hasOwnProperty.call(tilesetArray, key)) {
+          const element = tilesetArray[key];
+          element.maximumMemoryUsage = value2;
         }
-        })
-//maximumMemoryUsage 内存大小
-    Bus.$on('message2',val=>{
-        this.value=val
-        var value2 =val*102.4;
-        console.log(value2);
-     for (const key in tilesetArray) {
-     if (Object.hasOwnProperty.call(tilesetArray, key)) {
-      const element = tilesetArray[key];
-      element.maximumMemoryUsage=value2;
-     }
-     }
-        })
+      }
+    });
 
-//progressiveResolutionHeightFraction 0-0.5 
-   Bus.$on('message3',val=>{
-        this.value=val
-        var value3 =val*0.005;
-        console.log(value3);
+    //progressiveResolutionHeightFraction 0-0.5
+    Bus.$on("message3", (val) => {
+      this.value = val;
+      var value3 = val * 0.005;
+      console.log(value3);
       for (const key in tilesetArray) {
-       if (Object.hasOwnProperty.call(tilesetArray, key)) {
-      const element = tilesetArray[key];
-      element.progressiveResolutionHeightFraction=value3;
+        if (Object.hasOwnProperty.call(tilesetArray, key)) {
+          const element = tilesetArray[key];
+          element.progressiveResolutionHeightFraction = value3;
         }
-        }
-        })
-//cullRequestsWhileMovingMultiplie   移动时用于剔除请求的乘数。较大的代表更积极的剔除，较小的代表较不积极的剔除。
-    Bus.$on('message9',val=>{
-        this.value=val
-        var value9 =val;
-        console.log(value9);
+      }
+    });
+    //cullRequestsWhileMovingMultiplie   移动时用于剔除请求的乘数。较大的代表更积极的剔除，较小的代表较不积极的剔除。
+    Bus.$on("message9", (val) => {
+      this.value = val;
+      var value9 = val;
+      console.log(value9);
       for (const key in tilesetArray) {
-       if (Object.hasOwnProperty.call(tilesetArray, key)) {
-      const element = tilesetArray[key];
-      element.progressiveResolutionHeightFraction=value9;
+        if (Object.hasOwnProperty.call(tilesetArray, key)) {
+          const element = tilesetArray[key];
+          element.progressiveResolutionHeightFraction = value9;
         }
-        }
-        })
-//dynamicScreenSpaceError   减少离相机较远的图块的屏幕空间错误。
-    Bus.$on('message4',val=>{
-        this.value=val
-        var value4 =val;
-        console.log(value4);
+      }
+    });
+    //dynamicScreenSpaceError   减少离相机较远的图块的屏幕空间错误。
+    Bus.$on("message4", (val) => {
+      this.value = val;
+      var value4 = val;
+      console.log(value4);
       for (const key in tilesetArray) {
-       if (Object.hasOwnProperty.call(tilesetArray, key)) {
-      const element = tilesetArray[key];
-      element.dynamicScreenSpaceError=value4;
+        if (Object.hasOwnProperty.call(tilesetArray, key)) {
+          const element = tilesetArray[key];
+          element.dynamicScreenSpaceError = value4;
         }
-        }
-        })
-//loadSiblings   减少离相机较远的图块的屏幕空间错误。
-    Bus.$on('message5',val=>{
-        this.value=val
-        var value5 =val;
-        console.log(value5);
+      }
+    });
+    //loadSiblings   减少离相机较远的图块的屏幕空间错误。
+    Bus.$on("message5", (val) => {
+      this.value = val;
+      var value5 = val;
+      console.log(value5);
       for (const key in tilesetArray) {
-       if (Object.hasOwnProperty.call(tilesetArray, key)) {
-      const element = tilesetArray[key];
-      element.loadSiblings=value5;
+        if (Object.hasOwnProperty.call(tilesetArray, key)) {
+          const element = tilesetArray[key];
+          element.loadSiblings = value5;
         }
-        }
-        })
-//cullWithChildrenBounds   减少离相机较远的图块的屏幕空间错误。
-    Bus.$on('message6',val=>{
-        this.value=val
-        var value6 =val;
-        console.log(value6);
+      }
+    });
+    //cullWithChildrenBounds   减少离相机较远的图块的屏幕空间错误。
+    Bus.$on("message6", (val) => {
+      this.value = val;
+      var value6 = val;
+      console.log(value6);
       for (const key in tilesetArray) {
-       if (Object.hasOwnProperty.call(tilesetArray, key)) {
-      const element = tilesetArray[key];
-      element.cullWithChildrenBounds=value6;
+        if (Object.hasOwnProperty.call(tilesetArray, key)) {
+          const element = tilesetArray[key];
+          element.cullWithChildrenBounds = value6;
         }
-        }
-        })
-//cullRequestsWhileMoving   减少离相机较远的图块的屏幕空间错误。
-    Bus.$on('message7',val=>{
-        this.value=val
-        var value7 =val;
-        console.log(value7);
+      }
+    });
+    //cullRequestsWhileMoving   减少离相机较远的图块的屏幕空间错误。
+    Bus.$on("message7", (val) => {
+      this.value = val;
+      var value7 = val;
+      console.log(value7);
       for (const key in tilesetArray) {
-       if (Object.hasOwnProperty.call(tilesetArray, key)) {
-      const element = tilesetArray[key];
-      element.cullRequestsWhileMoving=value7;
+        if (Object.hasOwnProperty.call(tilesetArray, key)) {
+          const element = tilesetArray[key];
+          element.cullRequestsWhileMoving = value7;
         }
-        }
-        })
-//preloadWhenHidden   减少离相机较远的图块的屏幕空间错误。
-    Bus.$on('message8',val=>{
-        this.value=val
-        var value8 =val;
-        console.log(value8);
+      }
+    });
+    //preloadWhenHidden   减少离相机较远的图块的屏幕空间错误。
+    Bus.$on("message8", (val) => {
+      this.value = val;
+      var value8 = val;
+      console.log(value8);
       for (const key in tilesetArray) {
-       if (Object.hasOwnProperty.call(tilesetArray, key)) {
-      const element = tilesetArray[key];
-      element.preloadWhenHidden=value8;
+        if (Object.hasOwnProperty.call(tilesetArray, key)) {
+          const element = tilesetArray[key];
+          element.preloadWhenHidden = value8;
         }
-        }
-        })
+      }
+    });
     Bus.$on("hotpoint-addlayer", (res) => {
       var nodes = this.$refs.tree.getCheckedNodes();
       var renliu = false,
@@ -318,24 +327,20 @@ export default {
     });
   },
   methods: {
-  
     initChecked() {
       var nodes = this.$refs.tree.getCheckedNodes();
       for (var i = 0; i < nodes.length; i++) {
         var node = nodes[i];
         if (node.children == undefined || node.children.length == 0) {
           if (node.isLayer) this.addLayerData(node);
-          
           else if (node.isPrimitives) this.addPrimitivesData(node);
         }
       }
     },
-   async selectChange(tree, selectedItem) {
+    async selectChange(tree, selectedItem) {
       selectedItem.selected = !selectedItem.selected;
-        
     },
-  async  checkChange(tree, selectedItem) {
-
+    async checkChange(tree, selectedItem) {
       var show = false;
       if (selectedItem.checked == true) {
         show = true;
@@ -418,26 +423,28 @@ export default {
           this.removeHeatmap(selectedItem);
         }
       }
-    if(viewer.terrainProvider instanceof  Cesium.EllipsoidTerrainProvider){
-             for (var j = 0; j < entities.length; j++) {
-                  var _entity = entities[j];
-                  _entity.polygon.extrudedHeight =_entity.properties._Height._value
-              }
-           
-          }else{
-              if(selectedItem.isTerrain == true){
-                  let reslutArr  =  await Cesium.sampleTerrain(viewer.terrainProvider,11, centerArr)
-                  console.log(reslutArr)
-                   console.log(entityHeights.length)
-                  entityHeights = reslutArr.map(item=>item.height)
-
-              }
-              for (var j = 0; j < entities.length; j++) {
-                  var _entity = entities[j];
-                  _entity.polygon.extrudedHeight =entityHeights[j]+_entity.properties._Height._value
-              }
-
-          }
+      if (viewer.terrainProvider instanceof Cesium.EllipsoidTerrainProvider) {
+        for (var j = 0; j < entities.length; j++) {
+          var _entity = entities[j];
+          _entity.polygon.extrudedHeight = _entity.properties._Height._value;
+        }
+      } else {
+        if (selectedItem.isTerrain == true) {
+          let reslutArr = await Cesium.sampleTerrain(
+            viewer.terrainProvider,
+            11,
+            centerArr
+          );
+          console.log(reslutArr);
+          console.log(entityHeights.length);
+          entityHeights = reslutArr.map((item) => item.height);
+        }
+        for (var j = 0; j < entities.length; j++) {
+          var _entity = entities[j];
+          _entity.polygon.extrudedHeight =
+            entityHeights[j] + _entity.properties._Height._value;
+        }
+      }
     },
     addHeatmap(selectedItem) {
       if (selectedItem.title == "人流热力图") {
@@ -613,31 +620,27 @@ export default {
       if (data.title == "全球行政区划") {
         //加载天地图全球行政区划数据
         var provider = new Cesium.WebMapTileServiceImageryProvider({
-          url:
-            "http://t0.tianditu.com/ibo_w/wmts?service=wmts&tk=2a2c5ce64b61343727085b76c46d7ad3&request=GetTile&version=1.0.0&LAYER=ibo&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default.jpg",
+          url: "http://t0.tianditu.com/ibo_w/wmts?service=wmts&tk=2a2c5ce64b61343727085b76c46d7ad3&request=GetTile&version=1.0.0&LAYER=ibo&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default.jpg",
           layer: "tiandituImgQH",
           style: "default",
           format: "image/jpeg",
           tileMatrixSetID: "tiandituImgQH",
           maximumLevel: 16,
         });
-        layersData[data.title] = viewer.imageryLayers.addImageryProvider(
-          provider
-        );
+        layersData[data.title] =
+          viewer.imageryLayers.addImageryProvider(provider);
       } else if (data.title == "全球地名注记") {
         //加载天地图全球地名注记数据
         var provider = new Cesium.WebMapTileServiceImageryProvider({
-          url:
-            "http://t0.tianditu.com/cia_w/wmts?service=wmts&tk=2a2c5ce64b61343727085b76c46d7ad3&request=GetTile&version=1.0.0&LAYER=cia&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default.jpg",
+          url: "http://t0.tianditu.com/cia_w/wmts?service=wmts&tk=2a2c5ce64b61343727085b76c46d7ad3&request=GetTile&version=1.0.0&LAYER=cia&tileMatrixSet=w&TileMatrix={TileMatrix}&TileRow={TileRow}&TileCol={TileCol}&style=default.jpg",
           layer: "tiandituImgMarker",
           style: "default",
           format: "image/jpeg",
           tileMatrixSetID: "tiandituImgMarker",
           maximumLevel: 16,
         });
-        layersData[data.title] = viewer.imageryLayers.addImageryProvider(
-          provider
-        );
+        layersData[data.title] =
+          viewer.imageryLayers.addImageryProvider(provider);
       } else if (data.title == "武汉市行政区划") {
         var provider = new window.Cesium.WebMapServiceImageryProvider({
           url: URL.geoserver + "/jiujiang/wms",
@@ -649,9 +652,8 @@ export default {
             srs: "EPSG:4326",
           },
         });
-        layersData[data.title] = viewer.imageryLayers.addImageryProvider(
-          provider
-        );
+        layersData[data.title] =
+          viewer.imageryLayers.addImageryProvider(provider);
         // viewer.camera.flyTo({
         //   destination: Cesium.Cartesian3.fromDegrees(
         //     115.42510230563575,
@@ -678,9 +680,8 @@ export default {
             Cesium.Math.toRadians(30.0754823210523)
           ),
         });
-        layersData[data.title] = viewer.imageryLayers.addImageryProvider(
-          provider
-        );
+        layersData[data.title] =
+          viewer.imageryLayers.addImageryProvider(provider);
       }
     },
     removeLayerData(data) {
@@ -726,7 +727,7 @@ export default {
       }
       entitiesData[data.title] = [];
     },
-   async  addGeoJsonData(data) {
+    async addGeoJsonData(data) {
       if (data.title == "武汉市建筑") {
         var node = this.data[1].children;
         node.splice(3, 1, {
@@ -750,54 +751,63 @@ export default {
               clampToGround: true, //开启贴地
             });
             promise.then(function (dataSource) {
-            viewer.dataSources.add(dataSource);
-            entities = dataSource.entities.values;
-            var colorHash = {};
-  
-            for (var i = 0; i < entities.length; i++) {
-                    var entity = entities[i];
-                    var name = entity.name;
-                    var color = colorHash[name];
-                    if (!color) {
-       
-                        color = Cesium.Color.WHITESMOKE,
-                        colorHash[name] = color;
-                    }
-                    entity.polygon.material = color;
-                    entity.polygon.outline = false;   
-          if(viewer.terrainProvider instanceof  Cesium.EllipsoidTerrainProvider){
+              viewer.dataSources.add(dataSource);
+              entities = dataSource.entities.values;
+              var colorHash = {};
+
+              for (var i = 0; i < entities.length; i++) {
+                var entity = entities[i];
+                var name = entity.name;
+                var color = colorHash[name];
+                if (!color) {
+                  (color = Cesium.Color.WHITESMOKE), (colorHash[name] = color);
+                }
+                entity.polygon.material = color;
+                entity.polygon.outline = false;
+                if (
+                  viewer.terrainProvider instanceof
+                  Cesium.EllipsoidTerrainProvider
+                ) {
                   var _entity = entities[i];
-                  _entity.polygon.extrudedHeight =_entity.properties._Height._value
-              
-          }else{
-              if(entityHeights.length==0){
-                  let reslutArr  =  Cesium.sampleTerrain(viewer.terrainProvider,11, centerArr)
-                  console.log(reslutArr)
-                  entityHeights = reslutArr.map(item=>item.height)
-              }
+                  _entity.polygon.extrudedHeight =
+                    _entity.properties._Height._value;
+                } else {
+                  if (entityHeights.length == 0) {
+                    let reslutArr = Cesium.sampleTerrain(
+                      viewer.terrainProvider,
+                      11,
+                      centerArr
+                    );
+                    console.log(reslutArr);
+                    entityHeights = reslutArr.map((item) => item.height);
+                  }
                   var _entity = entities[i];
-                  _entity.polygon.extrudedHeight =entityHeights[i]+_entity.properties._Height._value
+                  _entity.polygon.extrudedHeight =
+                    entityHeights[i] + _entity.properties._Height._value;
+                }
+                // entity.polygon.extrudedHeight =entities[i].properties._Height._value;
 
-          }         
-                   // entity.polygon.extrudedHeight =entities[i].properties._Height._value;
-                    
-                    //100
-                        entity.polygon.classificationType =
-                        Cesium.ClassificationType.TERRAIN;
-                        entity.isBuilding = true;
-                        entity.polygon.HeightReference= Cesium.HeightReference.RELATIVE_TO_GROUND
-  
+                //100
+                entity.polygon.classificationType =
+                  Cesium.ClassificationType.TERRAIN;
+                entity.isBuilding = true;
+                entity.polygon.HeightReference =
+                  Cesium.HeightReference.RELATIVE_TO_GROUND;
 
-                      var polyPositions = entity.polygon.hierarchy.getValue(Cesium.JulianDate.now()).positions;
+                var polyPositions = entity.polygon.hierarchy.getValue(
+                  Cesium.JulianDate.now()
+                ).positions;
 
-                      var polyCenter = Cesium.BoundingSphere.fromPoints(polyPositions).center;
+                var polyCenter =
+                  Cesium.BoundingSphere.fromPoints(polyPositions).center;
 
-                      polyCenter = Cesium.Ellipsoid.WGS84.scaleToGeodeticSurface(polyCenter);
+                polyCenter =
+                  Cesium.Ellipsoid.WGS84.scaleToGeodeticSurface(polyCenter);
 
-                      let radisCenter = Cesium.Cartographic.fromCartesian(polyCenter)
-                      centerArr.push(radisCenter)
+                let radisCenter = Cesium.Cartographic.fromCartesian(polyCenter);
+                centerArr.push(radisCenter);
               }
-              
+
               geojsonData[data.title] = dataSource;
               viewer.camera.setView({
                 destination: Cesium.Cartesian3.fromDegrees(
@@ -813,7 +823,6 @@ export default {
               });
             });
           });
-    
       } else if (data.title == "视频监控点") {
         axios
           .get(
@@ -828,29 +837,34 @@ export default {
               clampToGround: true, //开启贴地
             });
             promise.then(function (dataSource) {
-                   viewer.dataSources.add(dataSource);
-            entities = dataSource.entities.values;
-            var colorHash = {};
-            for (var i = 0; i < entities.length; i++) {
-                    var entity = entities[i];
-                    var name = entity.name;
-                    var color = colorHash[name];
-                    if (!color) {
-                        color = Cesium.Color.WHITESMOKE,
-                        colorHash[name] = color;
-                    }
-                    entity.polygon.material = color;
-                    entity.polygon.outline = false;            
+              viewer.dataSources.add(dataSource);
+              entities = dataSource.entities.values;
+              var colorHash = {};
+              for (var i = 0; i < entities.length; i++) {
+                var entity = entities[i];
+                var name = entity.name;
+                var color = colorHash[name];
+                if (!color) {
+                  (color = Cesium.Color.WHITESMOKE), (colorHash[name] = color);
+                }
+                entity.polygon.material = color;
+                entity.polygon.outline = false;
 
-                     entity.polygon.extrudedHeight =entities[i].properties._Height._value
-                    //  _entity.polygon.extrudedHeight =entityHeights[i]+_entity.properties._Height._value;
-                    //100
-                     entity.polygon.HeightReference= Cesium.HeightReference.RELATIVE_TO_GROUND
-                      var polyPositions = entity.polygon.hierarchy.getValue(Cesium.JulianDate.now()).positions;
-                      var polyCenter = Cesium.BoundingSphere.fromPoints(polyPositions).center
-                      polyCenter = Cesium.Ellipsoid.WGS84.scaleToGeodeticSurface(polyCenter);
-                      let radisCenter = Cesium.Cartographic.fromCartesian(polyCenter)
-                      centerArr.push(radisCenter)
+                entity.polygon.extrudedHeight =
+                  entities[i].properties._Height._value;
+                //  _entity.polygon.extrudedHeight =entityHeights[i]+_entity.properties._Height._value;
+                //100
+                entity.polygon.HeightReference =
+                  Cesium.HeightReference.RELATIVE_TO_GROUND;
+                var polyPositions = entity.polygon.hierarchy.getValue(
+                  Cesium.JulianDate.now()
+                ).positions;
+                var polyCenter =
+                  Cesium.BoundingSphere.fromPoints(polyPositions).center;
+                polyCenter =
+                  Cesium.Ellipsoid.WGS84.scaleToGeodeticSurface(polyCenter);
+                let radisCenter = Cesium.Cartographic.fromCartesian(polyCenter);
+                centerArr.push(radisCenter);
               }
               geojsonData[data.title] = dataSource;
             });
@@ -933,7 +947,7 @@ export default {
           });
       }
     },
- 
+
     removePrimitivesData(data) {
       if (primitiveData.hasOwnProperty(data.title)) {
         var primitives = primitiveData[data.title];
@@ -1147,8 +1161,7 @@ export default {
         });
         var tileset = new Cesium.Cesium3DTileset({
           url: URL.tomcat + "/bandao/tileset.json",
-          
-          
+
           maximumScreenSpaceError: 2, //越小越清晰，向下加载瓦片
           maximumMemoryUsage: 4096, //允许使用的最大内存（M）
           dynamicScreenSpaceError: true, //允许动态调节屏幕误差
@@ -1305,7 +1318,7 @@ export default {
           .otherwise(function (error) {
             console.log(error);
           });
-      }else if (data.title == "武汉市建筑") {
+      } else if (data.title == "武汉市建筑") {
         viewer.camera.flyTo({
           destination: new Cesium.Cartesian3(
             -2427435.1202136064,
@@ -1318,7 +1331,7 @@ export default {
             roll: 6.28318484612079,
           },
         });
-        
+
         var tileset = new Cesium.Cesium3DTileset({
           url: "/data/wuhanbuildings/tileset.json",
           maximumScreenSpaceError: 2, //越小越清晰，向下加载瓦片

@@ -10,47 +10,44 @@
 
     <cesium-view></cesium-view>
     <!-- 工具栏的一些组件 -->
-    <tool-bar class="right-top">
-      
-    </tool-bar>
+    <tool-bar class="right-top"> </tool-bar>
     <!-- <measure-toolbar></measure-toolbar> -->
     <setting-toolbar></setting-toolbar>
     <hotpoint-toolbar></hotpoint-toolbar>
     <!-- 视频播放 -->
     <video-player></video-player>
-  
   </div>
 </template>
 
 <script>
-import toolBar from '@/components/layout/toolbar';
-import layerTree from '@/components/layout/layertree';
-import cesiumView from '@/components/layout/cesium';
-import settingToolbar from '@/components/toolbar/setting.vue';
-import measureToolbar from '@/components/toolbar/measure.vue';
-import hotpointToolbar from '@/components/toolbar/hotpoint.vue';
+import toolBar from "@/components/layout/toolbar";
+import layerTree from "@/components/layout/layertree";
+import cesiumView from "@/components/layout/cesium";
+import settingToolbar from "@/components/toolbar/setting.vue";
+import measureToolbar from "@/components/toolbar/measure.vue";
+import hotpointToolbar from "@/components/toolbar/hotpoint.vue";
 // import videoPlayer from '@/components/layout/videoplayer.vue';
-import axios from 'axios';
-import URL from '@/utils/Url.config.js';
-import EchartsLayer from '../components/EchartsLayer.js';
-import { option } from '../components/data.js';
-import '../components/PolylineDynamicMaterialProperty';
-import '../components/EllipsoidFadeMaterialProperty';
-import Windy from '../components/Windy';
-import CesiumTemperatureLayer from '../components/CesiumTemperature';
-import CesiumHeatmap from '../components/CesiumHeatmap';
-import { parabolaEquation } from '../components/PolylineParabola.js';
+import axios from "axios";
+import URL from "@/utils/Url.config.js";
+import EchartsLayer from "../components/EchartsLayer.js";
+import { option } from "../components/data.js";
+import "../components/PolylineDynamicMaterialProperty";
+import "../components/EllipsoidFadeMaterialProperty";
+import Windy from "../components/Windy";
+import CesiumTemperatureLayer from "../components/CesiumTemperature";
+import CesiumHeatmap from "../components/CesiumHeatmap";
+import { parabolaEquation } from "../components/PolylineParabola.js";
 import {
   layerSplit,
   removeLayerSplit,
-} from '../components/CesiumLayersSplit.js';
+} from "../components/CesiumLayersSplit.js";
 import {
   lidarPlaneScan,
   lidarHemisphereScan,
   lidarPyramidScan,
-} from '../components/CreateLidarEntity';
+} from "../components/CreateLidarEntity";
 export default {
-  name: 'layout',
+  name: "layout",
   components: {
     toolBar,
     layerTree,
@@ -69,44 +66,44 @@ export default {
       alreadylist: [], // 已经处理好的数据
     };
   },
-created(){
-  const city = "武汉"
-	      //和风天气插件调用
-	      window.WIDGET = {
-  "CONFIG": {
-    "modules": "01234",
-    "background": "1",
-    "tmpColor": "FFFFFF",
-    "tmpSize": "16",
-    "cityColor": "FFFFFF",
-    "citySize": "16",
-    "aqiColor": "FFFFFF",
-    "aqiSize": "16",
-    "weatherIconSize": "24",
-    "alertIconSize": "18",
-    "padding": "10px 10px 10px 10px",
-    "shadow": "1",
-    "language": "auto",
-    "borderRadius": "5",
-    "fixed": "true",
-    "vertical": "top",
-    "horizontal": "left",
-    "right": "-1650",
-    "top": "70",
-    "key": "c954748cc7334106a549f952acef1d89"
-  }
-	      };
-	      (function (d) {
-	        var c = d.createElement('link');
-	        c.rel = 'stylesheet';
-	        c.href = 'static/css/he-simple.css';
-	        var s = d.createElement('script');
-	        s.src = 'static/js/he-simple.js';
-	        var sn = d.getElementsByTagName('script')[0];
-	        sn.parentNode.insertBefore(c, sn);
-	        sn.parentNode.insertBefore(s, sn);
-	      })(document);
-	    },
+  created() {
+    const city = "武汉";
+    //和风天气插件调用
+    window.WIDGET = {
+      CONFIG: {
+        modules: "01234",
+        background: "1",
+        tmpColor: "FFFFFF",
+        tmpSize: "16",
+        cityColor: "FFFFFF",
+        citySize: "16",
+        aqiColor: "FFFFFF",
+        aqiSize: "16",
+        weatherIconSize: "24",
+        alertIconSize: "18",
+        padding: "10px 10px 10px 10px",
+        shadow: "1",
+        language: "auto",
+        borderRadius: "5",
+        fixed: "true",
+        vertical: "top",
+        horizontal: "left",
+        right: "-1650",
+        top: "70",
+        key: "c954748cc7334106a549f952acef1d89",
+      },
+    };
+    (function (d) {
+      var c = d.createElement("link");
+      c.rel = "stylesheet";
+      c.href = "static/css/he-simple.css";
+      var s = d.createElement("script");
+      s.src = "static/js/he-simple.js";
+      var sn = d.getElementsByTagName("script")[0];
+      sn.parentNode.insertBefore(c, sn);
+      sn.parentNode.insertBefore(s, sn);
+    })(document);
+  },
   mounted() {
     // this.initCesium();
     //this.mouseEvent();
@@ -126,14 +123,14 @@ created(){
     // this.addWind();
     // // 热力图
     //  this.addHeatmap();
-     //气泡弹框
+    //气泡弹框
     // this.addBubble();
     // // 卷帘分析
     //  this.addLayerSplit();
   },
   methods: {
     addOdLine() {
-      Cesium.Resource.fetchJson('./bjgj.json').then(function (e) {
+      Cesium.Resource.fetchJson("./bjgj.json").then(function (e) {
         e.length;
         var p = [];
         e.map(function (e, i) {
@@ -167,7 +164,7 @@ created(){
     addEchartsLayer() {
       viewer.scene.globe.baseColor = new Cesium.Color(1, 1, 1, 0);
       viewer.scene.globe.depthTestAgainstTerrain = true;
-      viewer._cesiumWidget._creditContainer.style.display = 'none';
+      viewer._cesiumWidget._creditContainer.style.display = "none";
 
       let _echartLayer = new EchartsLayer(viewer, option);
       viewer.camera.setView({
@@ -204,7 +201,7 @@ created(){
     addFlights() {
       axios
         .get(
-          'https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples/data-gl/asset/data/flights.json'
+          "https://cdn.jsdelivr.net/gh/apache/echarts-website@asf-site/examples/data-gl/asset/data/flights.json"
         )
         .then((res) => {
           let data = res.data;
@@ -231,7 +228,7 @@ created(){
       let map = CesiumHeatmap.create({
         viewer: viewer,
         options: {
-          backgroundColor: 'rgba(0,0,0,0)',
+          backgroundColor: "rgba(0,0,0,0)",
           radius: 100,
           maxOpacity: 0.5,
           minOpacity: 0,
@@ -244,7 +241,7 @@ created(){
       });
     },
     addTemperature() {
-      let a = new CesiumTemperatureLayer('/data/2020072206tmp.json');
+      let a = new CesiumTemperatureLayer("/data/2020072206tmp.json");
     },
     addLidar() {
       let lidar1 = lidarPlaneScan(120, 30, 3000);
@@ -255,7 +252,7 @@ created(){
       });
     },
     addWind() {
-      let wind = new Windy('/data/gfs.json');
+      let wind = new Windy("/data/gfs.json");
     },
     layerShowChange() {
       this.layerShow = !this.layerShow;
@@ -267,7 +264,7 @@ created(){
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
 .layout {
-   position: relative;
+  position: relative;
   width: 100%;
   height: 100%;
   -webkit-touch-callout: none; /* iOS Safari */
@@ -335,7 +332,6 @@ created(){
   text-shadow: 3px 4px 0px #1c2f3c;
 }
 
-
 .header-title span {
   font-size: 20px;
   margin-left: 10px;
@@ -357,53 +353,43 @@ created(){
   line-height: 25px;
   color: #c5c4c4;
 }
-
 </style>
 <style>
-
-.ivu-modal-content{
+.ivu-modal-content {
   background: rgba(8, 10, 52, 0.8) !important;
   color: white;
-  font-family: "微软雅黑"
+  font-family: "微软雅黑";
 }
-.ivu-modal-header-inner{
-  
+.ivu-modal-header-inner {
   color: #f9f9f9 !important;
-  font-family: "微软雅黑"
+  font-family: "微软雅黑";
 }
-.ivu-table-header
-{
+.ivu-table-header {
   background: rgba(8, 10, 52, 0.8) !important;
   color: #f9f9f9;
-  font-family: "微软雅黑"
+  font-family: "微软雅黑";
 }
-.ivu-table-body
-{
+.ivu-table-body {
   background: rgba(8, 10, 52, 0.8) !important;
   color: #f9f9f9;
-  font-family: "微软雅黑"
+  font-family: "微软雅黑";
 }
-.ivu-table td
-{
+.ivu-table td {
   background: rgba(8, 10, 52, 0.8) !important;
   color: #f9f9f9;
-  font-family: "微软雅黑"
+  font-family: "微软雅黑";
 }
-.ivu-table th 
-{
+.ivu-table th {
   background: rgba(8, 10, 52, 0.8) !important;
   color: #f9f9f9;
-  font-family: "微软雅黑"
+  font-family: "微软雅黑";
 }
-.ivu-table-tbody td :hover
-{
+.ivu-table-tbody td :hover {
   background-color: rgba(153, 155, 190, 0.8) !important;
   color: #cecaca;
-  font-family: "微软雅黑"
+  font-family: "微软雅黑";
 }
-.ivu-btn-text
-{
-  
+.ivu-btn-text {
   color: #f9f9f9 !important;
   font-family: "微软雅黑";
 }

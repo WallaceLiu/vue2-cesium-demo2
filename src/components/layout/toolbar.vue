@@ -1,3 +1,4 @@
+<!-- 顶部工具栏 风场 温度 航线 热点 设置 -->
 <template>
   <div>
     <button
@@ -140,7 +141,9 @@ export default {
         },
       });
     },
+    // 创建航线
     createFlights(pt1, pt2) {
+      // 创建抛物线
       var points = parabolaEquation({
         pt1: { x: pt1[0], y: pt1[1] },
         pt2: { x: pt2[0], y: pt2[1] },
@@ -200,6 +203,7 @@ export default {
         destination: Cesium.Cartesian3.fromDegrees(121, 31, 500000),
       });
     },
+    // 温度
     addTemperature() {
       let a = new CesiumTemperatureLayer('/data/2020072206tmp.json');
     },
@@ -211,6 +215,7 @@ export default {
         destination: Cesium.Cartesian3.fromDegrees(120.1, 30, 30000),
       });
     },
+    // 风场
     addWind() {
       let wind = new Windy('/data/gfs.json');
     },
